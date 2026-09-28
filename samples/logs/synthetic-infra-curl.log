@@ -1,0 +1,13 @@
+2026-09-14T08:12:31.0370000Z ##[group]Run if [ "$SCENARIO" = "infra_timeout" ]; then
+2026-09-14T08:12:31.1110000Z if [ "$SCENARIO" = "infra_timeout" ]; then
+2026-09-14T08:12:31.2220000Z   curl --fail --silent --show-error --max-time 5 https://10.255.255.1/fixtures.tgz -o fixtures.tgz
+2026-09-14T08:12:31.3700000Z else
+2026-09-14T08:12:31.5550000Z   echo "Fixtures cached, nothing to fetch"
+2026-09-14T08:12:31.5920000Z fi
+2026-09-14T08:12:31.6660000Z shell: /usr/bin/bash -e {0}
+2026-09-14T08:12:31.7770000Z env:
+2026-09-14T08:12:31.9250000Z   SCENARIO: infra_timeout
+2026-09-14T08:12:32.1100000Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.6/x64
+2026-09-14T08:12:32.1470000Z ##[endgroup]
+2026-09-14T08:12:32.2210000Z curl: (28) Failed to connect to 10.255.255.1 port 443 after 5002 ms: Timeout was reached
+2026-09-14T08:12:32.3320000Z ##[error]Process completed with exit code 28.

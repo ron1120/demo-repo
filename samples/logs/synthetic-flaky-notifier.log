@@ -1,0 +1,35 @@
+2026-09-14T08:12:31.0370000Z ##[group]Run pytest -v
+2026-09-14T08:12:31.1110000Z pytest -v
+2026-09-14T08:12:31.2220000Z shell: /usr/bin/bash -e {0}
+2026-09-14T08:12:31.3700000Z env:
+2026-09-14T08:12:31.5550000Z   SCENARIO: flaky
+2026-09-14T08:12:31.5920000Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.6/x64
+2026-09-14T08:12:31.6660000Z ##[endgroup]
+2026-09-14T08:12:31.7770000Z ============================= test session starts ==============================
+2026-09-14T08:12:31.9250000Z platform linux -- Python 3.12.6, pytest-8.3.3, pluggy-1.5.0 -- /opt/hostedtoolcache/Python/3.12.6/x64/bin/python
+2026-09-14T08:12:32.1100000Z cachedir: .pytest_cache
+2026-09-14T08:12:32.1470000Z rootdir: /home/runner/work/demo-ci/demo-ci
+2026-09-14T08:12:32.2210000Z collecting ... collected 6 items
+2026-09-14T08:12:32.3320000Z 
+2026-09-14T08:12:32.4800000Z tests/test_notifier.py::test_delivery_acknowledged FAILED                [ 16%]
+2026-09-14T08:12:32.6650000Z tests/test_notifier.py::test_empty_message_rejected PASSED               [ 33%]
+2026-09-14T08:12:32.7020000Z tests/test_orders.py::test_order_total PASSED                            [ 50%]
+2026-09-14T08:12:32.7760000Z tests/test_orders.py::test_apply_discount PASSED                         [ 66%]
+2026-09-14T08:12:32.8870000Z tests/test_orders.py::test_discount_never_negative PASSED                [ 83%]
+2026-09-14T08:12:33.0350000Z tests/test_orders.py::test_empty_order PASSED                            [100%]
+2026-09-14T08:12:33.2200000Z 
+2026-09-14T08:12:33.2570000Z =================================== FAILURES ===================================
+2026-09-14T08:12:33.3310000Z _________________________ test_delivery_acknowledged ___________________________
+2026-09-14T08:12:33.4420000Z 
+2026-09-14T08:12:33.5900000Z     def test_delivery_acknowledged():
+2026-09-14T08:12:33.7750000Z >       assert deliver("order shipped", timeout=0.25) is True
+2026-09-14T08:12:33.8120000Z 
+2026-09-14T08:12:33.8860000Z tests/test_notifier.py:7:
+2026-09-14T08:12:33.9970000Z _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+2026-09-14T08:12:34.1450000Z app/notifier.py:20: in deliver
+2026-09-14T08:12:34.3300000Z     raise TimeoutError(f"delivery not acknowledged within {timeout}s")
+2026-09-14T08:12:34.3670000Z E   TimeoutError: delivery not acknowledged within 0.25s
+2026-09-14T08:12:34.4410000Z =========================== short test summary info ============================
+2026-09-14T08:12:34.5520000Z FAILED tests/test_notifier.py::test_delivery_acknowledged - TimeoutError: delivery not acknowledged within 0.25s
+2026-09-14T08:12:34.7000000Z ========================= 1 failed, 5 passed in 0.72s ==========================
+2026-09-14T08:12:34.8850000Z ##[error]Process completed with exit code 1.

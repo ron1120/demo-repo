@@ -1,0 +1,4 @@
+# One known-flaky test id (or a substring of it) per line. Pass with --known-flaky.
+# If every failing test in a run matches, the rules layer suggests "flaky_test".
+tests/test_notifier.py::test_delivery_acknowledged
+tests/test_limiter.py::test_window_resets_after_one_second

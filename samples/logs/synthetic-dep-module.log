@@ -1,0 +1,28 @@
+2026-09-14T08:12:31.0370000Z ##[group]Run pytest -v
+2026-09-14T08:12:31.1110000Z pytest -v
+2026-09-14T08:12:31.2220000Z shell: /usr/bin/bash -e {0}
+2026-09-14T08:12:31.3700000Z env:
+2026-09-14T08:12:31.5550000Z   SCENARIO: none
+2026-09-14T08:12:31.5920000Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.6/x64
+2026-09-14T08:12:31.6660000Z ##[endgroup]
+2026-09-14T08:12:31.7770000Z ============================= test session starts ==============================
+2026-09-14T08:12:31.9250000Z platform linux -- Python 3.12.6, pytest-8.3.3, pluggy-1.5.0
+2026-09-14T08:12:32.1100000Z rootdir: /home/runner/work/settings-service/settings-service
+2026-09-14T08:12:32.1470000Z collected 0 items / 1 error
+2026-09-14T08:12:32.2210000Z 
+2026-09-14T08:12:32.3320000Z ==================================== ERRORS ====================================
+2026-09-14T08:12:32.4800000Z _______________________ ERROR collecting tests/test_config.py ______________________
+2026-09-14T08:12:32.6650000Z ImportError while importing test module '/home/runner/work/settings-service/settings-service/tests/test_config.py'.
+2026-09-14T08:12:32.7020000Z Hint: make sure your test modules/packages have valid Python names.
+2026-09-14T08:12:32.7760000Z Traceback:
+2026-09-14T08:12:32.8870000Z /opt/hostedtoolcache/Python/3.12.6/x64/lib/python3.12/importlib/__init__.py:90: in import_module
+2026-09-14T08:12:33.0350000Z     return _bootstrap._gcd_import(name[level:], package, level)
+2026-09-14T08:12:33.2200000Z tests/test_config.py:1: in <module>
+2026-09-14T08:12:33.2570000Z     from app.config import load_settings
+2026-09-14T08:12:33.3310000Z app/config.py:3: in <module>
+2026-09-14T08:12:33.4420000Z     import yaml
+2026-09-14T08:12:33.5900000Z E   ModuleNotFoundError: No module named 'yaml'
+2026-09-14T08:12:33.7750000Z =========================== short test summary info ============================
+2026-09-14T08:12:33.8120000Z ERROR tests/test_config.py
+2026-09-14T08:12:33.8860000Z !!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+2026-09-14T08:12:33.9970000Z ##[error]Process completed with exit code 2.

@@ -1,0 +1,14 @@
+2026-09-14T08:12:31.0370000Z ##[group]Run pip install -r requirements.txt
+2026-09-14T08:12:31.1110000Z pip install -r requirements.txt
+2026-09-14T08:12:31.2220000Z shell: /usr/bin/bash -e {0}
+2026-09-14T08:12:31.3700000Z ##[endgroup]
+2026-09-14T08:12:31.5550000Z Collecting numpy==2.1.1 (from -r requirements.txt (line 3))
+2026-09-14T08:12:31.5920000Z   Downloading numpy-2.1.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (16.0 MB)
+2026-09-14T08:12:31.6660000Z      ---------------------------------------- 16.0/16.0 MB 82.1 MB/s eta 0:00:00
+2026-09-14T08:12:31.7770000Z Collecting pandas==2.2.3 (from -r requirements.txt (line 4))
+2026-09-14T08:12:31.9250000Z   Downloading pandas-2.2.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (12.7 MB)
+2026-09-14T08:12:32.1100000Z      ---------------------------------------- 12.7/12.7 MB 91.4 MB/s eta 0:00:00
+2026-09-14T08:12:32.1470000Z Installing collected packages: numpy, pandas
+2026-09-14T08:12:32.2210000Z ERROR: Could not install packages due to an OSError: [Errno 28] No space left on device
+2026-09-14T08:12:32.3320000Z 
+2026-09-14T08:12:32.4800000Z ##[error]Process completed with exit code 1.

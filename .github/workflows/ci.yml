@@ -1,0 +1,54 @@
+name: CI
+run-name: CI (${{ github.event.inputs.scenario || 'push' }})
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      scenario:
+        description: Failure to simulate
+        type: choice
+        default: none
+        options:
+          - none
+          - real_bug
+          - flaky
+          - infra_timeout
+          - dependency_missing
+
+env:
+  SCENARIO: ${{ github.event.inputs.scenario || 'none' }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: demo-app
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          if [ "$SCENARIO" = "dependency_missing" ]; then
+            pip install "requests==99.0.0"
+          fi
+
+      - name: Fetch test fixtures
+        run: |
+          if [ "$SCENARIO" = "infra_timeout" ]; then
+            curl --fail --silent --show-error --max-time 5 https://10.255.255.1/fixtures.tgz -o fixtures.tgz
+          else
+            echo "Fixtures cached, nothing to fetch"
+          fi
+
+      - name: Run tests
+        run: pytest -v

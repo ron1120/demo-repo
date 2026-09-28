@@ -1,0 +1,82 @@
+[
+  {
+    "id": "synthetic-real-discount",
+    "log": "logs/synthetic-real-discount.log",
+    "label": "real_failure",
+    "meta": {
+      "workflow": "CI",
+      "event": "push",
+      "run_attempt": 1
+    }
+  },
+  {
+    "id": "synthetic-real-checkout",
+    "log": "logs/synthetic-real-checkout.log",
+    "label": "real_failure",
+    "meta": {
+      "workflow": "CI",
+      "event": "push",
+      "run_attempt": 1
+    }
+  },
+  {
+    "id": "synthetic-flaky-notifier",
+    "log": "logs/synthetic-flaky-notifier.log",
+    "label": "flaky_test",
+    "meta": {
+      "workflow": "CI",
+      "event": "push",
+      "run_attempt": 1
+    }
+  },
+  {
+    "id": "synthetic-flaky-limiter",
+    "log": "logs/synthetic-flaky-limiter.log",
+    "label": "flaky_test",
+    "meta": {
+      "workflow": "CI",
+      "event": "push",
+      "run_attempt": 1
+    }
+  },
+  {
+    "id": "synthetic-infra-curl",
+    "log": "logs/synthetic-infra-curl.log",
+    "label": "infra_failure",
+    "meta": {
+      "workflow": "CI",
+      "event": "push",
+      "run_attempt": 1
+    }
+  },
+  {
+    "id": "synthetic-infra-disk",
+    "log": "logs/synthetic-infra-disk.log",
+    "label": "infra_failure",
+    "meta": {
+      "workflow": "CI",
+      "event": "push",
+      "run_attempt": 1
+    }
+  },
+  {
+    "id": "synthetic-dep-version",
+    "log": "logs/synthetic-dep-version.log",
+    "label": "dependency_env",
+    "meta": {
+      "workflow": "CI",
+      "event": "push",
+      "run_attempt": 1
+    }
+  },
+  {
+    "id": "synthetic-dep-module",
+    "log": "logs/synthetic-dep-module.log",
+    "label": "dependency_env",
+    "meta": {
+      "workflow": "CI",
+      "event": "push",
+      "run_attempt": 1
+    }
+  }
+]

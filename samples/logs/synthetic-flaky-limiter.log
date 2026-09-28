@@ -1,0 +1,34 @@
+2026-09-14T08:12:31.0370000Z ##[group]Run pytest -v
+2026-09-14T08:12:31.1110000Z pytest -v
+2026-09-14T08:12:31.2220000Z shell: /usr/bin/bash -e {0}
+2026-09-14T08:12:31.3700000Z env:
+2026-09-14T08:12:31.5550000Z   SCENARIO: none
+2026-09-14T08:12:31.5920000Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.6/x64
+2026-09-14T08:12:31.6660000Z ##[endgroup]
+2026-09-14T08:12:31.7770000Z ============================= test session starts ==============================
+2026-09-14T08:12:31.9250000Z platform linux -- Python 3.12.6, pytest-8.3.3, pluggy-1.5.0 -- /opt/hostedtoolcache/Python/3.12.6/x64/bin/python
+2026-09-14T08:12:32.1100000Z rootdir: /home/runner/work/api-gateway/api-gateway
+2026-09-14T08:12:32.1470000Z collecting ... collected 31 items
+2026-09-14T08:12:32.2210000Z 
+2026-09-14T08:12:32.3320000Z tests/test_limiter.py::test_blocks_over_limit PASSED                     [ 74%]
+2026-09-14T08:12:32.4800000Z tests/test_limiter.py::test_window_resets_after_one_second FAILED        [ 77%]
+2026-09-14T08:12:32.6650000Z tests/test_limiter.py::test_separate_keys_do_not_share_budget PASSED     [ 80%]
+2026-09-14T08:12:32.7020000Z 
+2026-09-14T08:12:32.7760000Z =================================== FAILURES ===================================
+2026-09-14T08:12:32.8870000Z _____________________ test_window_resets_after_one_second ______________________
+2026-09-14T08:12:33.0350000Z 
+2026-09-14T08:12:33.2200000Z limiter = <app.limiter.SlidingWindowLimiter object at 0x7fa0c41d2e10>
+2026-09-14T08:12:33.2570000Z 
+2026-09-14T08:12:33.3310000Z     def test_window_resets_after_one_second(limiter):
+2026-09-14T08:12:33.4420000Z         for _ in range(5):
+2026-09-14T08:12:33.5900000Z             limiter.allow("client-a")
+2026-09-14T08:12:33.7750000Z         time.sleep(1.0)
+2026-09-14T08:12:33.8120000Z >       assert sum(limiter.allow("client-a") for _ in range(5)) == 5
+2026-09-14T08:12:33.8860000Z E       assert 4 == 5
+2026-09-14T08:12:33.9970000Z E        +  where 4 = sum(<generator object test_window_resets_after_one_second.<locals>.<genexpr> at 0x7fa0c4210f20>)
+2026-09-14T08:12:34.1450000Z 
+2026-09-14T08:12:34.3300000Z tests/test_limiter.py:41: AssertionError
+2026-09-14T08:12:34.3670000Z =========================== short test summary info ============================
+2026-09-14T08:12:34.4410000Z FAILED tests/test_limiter.py::test_window_resets_after_one_second - assert 4 == 5
+2026-09-14T08:12:34.5520000Z ======================== 1 failed, 30 passed in 6.02s ==========================
+2026-09-14T08:12:34.7000000Z ##[error]Process completed with exit code 1.

@@ -1,0 +1,18 @@
+2026-09-14T08:12:31.0370000Z ##[group]Run python -m pip install --upgrade pip
+2026-09-14T08:12:31.1110000Z python -m pip install --upgrade pip
+2026-09-14T08:12:31.2220000Z pip install -r requirements.txt
+2026-09-14T08:12:31.3700000Z if [ "$SCENARIO" = "dependency_missing" ]; then
+2026-09-14T08:12:31.5550000Z   pip install "requests==99.0.0"
+2026-09-14T08:12:31.5920000Z fi
+2026-09-14T08:12:31.6660000Z shell: /usr/bin/bash -e {0}
+2026-09-14T08:12:31.7770000Z env:
+2026-09-14T08:12:31.9250000Z   SCENARIO: dependency_missing
+2026-09-14T08:12:32.1100000Z ##[endgroup]
+2026-09-14T08:12:32.1470000Z Requirement already satisfied: pip in /opt/hostedtoolcache/Python/3.12.6/x64/lib/python3.12/site-packages (24.2)
+2026-09-14T08:12:32.2210000Z Collecting pytest==8.3.3 (from -r requirements.txt (line 1))
+2026-09-14T08:12:32.3320000Z   Downloading pytest-8.3.3-py3-none-any.whl (342 kB)
+2026-09-14T08:12:32.4800000Z Installing collected packages: pytest
+2026-09-14T08:12:32.6650000Z Successfully installed pytest-8.3.3
+2026-09-14T08:12:32.7020000Z ERROR: Could not find a version that satisfies the requirement requests==99.0.0 (from versions: 0.0.1, 0.2.0, 0.2.1, 0.2.2, 0.2.3, 0.2.4, 0.3.0, 0.3.1, 0.3.2, 2.32.0, 2.32.1, 2.32.2, 2.32.3)
+2026-09-14T08:12:32.7760000Z ERROR: No matching distribution found for requests==99.0.0
+2026-09-14T08:12:32.8870000Z ##[error]Process completed with exit code 1.
