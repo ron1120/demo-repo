@@ -125,8 +125,23 @@ def test_record_is_saved_even_when_slack_fails(notify_env, monkeypatch, tmp_path
     assert json.loads(out.read_text())["diagnosis"]["category"] == "flaky_test"
 
 
-def test_notify_without_a_webhook_prints_instead_of_posting(notify_env, monkeypatch, capsys):
+@pytest.mark.parametrize("unset", ["missing", "empty"])
+def test_notify_without_a_webhook_fails_before_diagnosing(notify_env, monkeypatch, capsys, unset):
+    # GitHub passes an empty string when a referenced secret does not exist.
+    if unset == "missing":
+        monkeypatch.delenv("SLACK_WEBHOOK_URL", raising=False)
+    else:
+        monkeypatch.setenv("SLACK_WEBHOOK_URL", "")
+
+    def must_not_run(*args, **kwargs):
+        raise AssertionError("diagnosed a run that could never be posted")
+
+    monkeypatch.setattr(cli, "diagnose_run", must_not_run)
+    assert cli.main(["notify", "--repo", "o/r", "--run-id", "7"]) == 1
+    assert notify_env == [] and "SLACK_WEBHOOK_URL is not set" in capsys.readouterr().err
+
+
+def test_dry_run_works_without_a_webhook(notify_env, monkeypatch, capsys):
     monkeypatch.delenv("SLACK_WEBHOOK_URL", raising=False)
-    assert cli.main(["notify", "--repo", "o/r", "--run-id", "7"]) == 0
-    captured = capsys.readouterr()
-    assert notify_env == [] and "SLACK_WEBHOOK_URL is not set" in captured.err
+    assert cli.main(["notify", "--repo", "o/r", "--run-id", "7", "--dry-run"]) == 0
+    assert notify_env == [] and '"blocks"' in capsys.readouterr().out

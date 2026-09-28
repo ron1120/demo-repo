@@ -45,6 +45,13 @@ def cmd_diagnose(args) -> int:
 
 
 def cmd_notify(args) -> int:
+    webhook = os.environ.get("SLACK_WEBHOOK_URL")
+    # Checked first so a misconfigured workflow fails loudly without spending a model call.
+    if not webhook and not args.dry_run:
+        print("error: SLACK_WEBHOOK_URL is not set, so there is nowhere to post the diagnosis. Add it as a "
+              "repository secret, or use --dry-run to print the message instead.", file=sys.stderr)
+        return 1
+
     known = load_known_flaky(args.known_flaky)
     d, meta = diagnose_run(args.repo, args.run_id, mode=args.mode, known_flaky=known)
     run_url = f"https://github.com/{args.repo}/actions/runs/{args.run_id}"
@@ -55,10 +62,7 @@ def cmd_notify(args) -> int:
         Path(args.out).write_text(record + "\n", encoding="utf-8")
 
     payload = build_message(d, meta, run_url)
-    webhook = os.environ.get("SLACK_WEBHOOK_URL")
-    if args.dry_run or not webhook:
-        if not args.dry_run:
-            print("warning: SLACK_WEBHOOK_URL is not set; printing instead of posting", file=sys.stderr)
+    if args.dry_run:
         print(json.dumps(payload, indent=2))
         return 0
     post(webhook, payload)

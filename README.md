@@ -41,7 +41,8 @@ mentions (`<!channel>`) or links.
 2. **Slack webhook.** At api.slack.com/apps create an app, enable **Incoming Webhooks**, add a webhook to
    the channel you want, and copy its URL. You do not need to connect Slack to anything else.
 3. **Repo secrets** (Settings, Secrets and variables, Actions):
-   - `SLACK_WEBHOOK_URL`: the webhook URL from step 2.
+   - `SLACK_WEBHOOK_URL`: the webhook URL from step 2. If it is missing, the triage run fails with an
+     error saying so, before fetching logs or calling the model.
    - `ANTHROPIC_API_KEY`: your API key. (`GITHUB_TOKEN` is provided automatically.)
 4. Generate failures: `scripts/generate_runs.sh 1` (needs the `gh` CLI), or Actions tab, CI, Run workflow.
    Each failing run should produce a Slack message within about a minute of the run ending.
@@ -54,7 +55,7 @@ Rules-only failures (network, disk, dependency) need no API key; the model is ca
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements-dev.txt
-pytest                                     # 75 offline tests
+pytest                                     # 77 offline tests
 
 python -m triage diagnose --log-file samples/logs/synthetic-flaky-notifier.log
 python -m triage diagnose --repo OWNER/REPO --run-id 123456789
