@@ -49,12 +49,13 @@ def test_run_without_failed_jobs_is_an_error():
         GitHubClient(token="t", session=FakeSession(routes)).fetch_failure("o/r", 7)
 
 
-def test_build_dataset_labels_from_run_title_and_dedupes(tmp_path):
+def test_build_dataset_labels_from_case_code_and_dedupes(tmp_path):
     routes = {
         **ROUTES,
         "/repos/o/r/actions/workflows/ci.yml/runs": {"workflow_runs": [
-            {"id": 7, "display_title": "CI (real_bug)"},
+            {"id": 7, "display_title": "CI (case_a)"},
             {"id": 8, "display_title": "CI (push)"},
+            {"id": 9, "display_title": "CI (real_bug)"},  # old naming: its log names the answer, so skip it
         ]},
     }
     gh = GitHubClient(token="t", session=FakeSession(routes))

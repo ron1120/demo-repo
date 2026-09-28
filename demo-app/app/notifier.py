@@ -3,10 +3,8 @@ import time
 
 
 def _ack_delay():
-    # Simulated flake: on the first attempt of a run the acknowledgement arrives after the deadline.
-    # A re-run of the same commit passes, which is what makes it flaky rather than a real bug.
     first_attempt = os.environ.get("GITHUB_RUN_ATTEMPT", "2") == "1"
-    if os.environ.get("SCENARIO") == "flaky" and first_attempt:
+    if os.environ.get("CASE") == "case_b" and first_attempt:
         return 0.35
     return 0.01
 

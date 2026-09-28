@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
-# Dispatch simulated CI runs so there are real failed runs to triage.
-# Usage: scripts/generate_runs.sh [runs_per_scenario]   (default 3 -> 12 failing + 3 passing)
-# Do not re-run the flaky runs afterwards: a re-run overwrites the failed conclusion.
+# Dispatch demo CI runs so there are real failed runs to triage.
+# Usage: scripts/generate_runs.sh [runs_per_case]   (default 3 -> 12 failing + 3 passing)
+# Do not re-run failed case_b runs afterwards: a passing re-run overwrites the failed conclusion.
 set -euo pipefail
 
 COUNT="${1:-3}"
 command -v gh >/dev/null || { echo "gh CLI is required (https://cli.github.com)"; exit 1; }
 
-for scenario in real_bug flaky infra_timeout dependency_missing none; do
+for case in case_a case_b case_c case_d none; do
   for _ in $(seq "$COUNT"); do
-    gh workflow run ci.yml -f scenario="$scenario"
+    gh workflow run ci.yml -f case="$case"
   done
 done
 

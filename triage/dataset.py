@@ -7,17 +7,19 @@ from pathlib import Path
 from .diagnose import prepare
 from .models import DEPENDENCY_ENV, FLAKY_TEST, INFRA_FAILURE, REAL_FAILURE
 
-SCENARIO_LABELS = {
-    "real_bug": REAL_FAILURE,
-    "flaky": FLAKY_TEST,
-    "infra_timeout": INFRA_FAILURE,
-    "dependency_missing": DEPENDENCY_ENV,
+# Answer key for the demo workflow's neutral case codes. Only this file maps codes to labels, so the
+# label never appears in anything the model reads (workflow, run title, job log).
+CASE_LABELS = {
+    "case_a": REAL_FAILURE,
+    "case_b": FLAKY_TEST,
+    "case_c": INFRA_FAILURE,
+    "case_d": DEPENDENCY_ENV,
 }
 _TITLE = re.compile(r"^CI \((\w+)\)")
 
 
 def build_dataset(github, repo: str, out_dir: Path, workflow: str = "ci.yml") -> list[dict]:
-    """Download redacted logs of the demo repo's failed runs and label them from the scenario in the run title."""
+    """Download redacted logs of the demo repo's failed runs and label them from the case code in the run title."""
     labels_path = out_dir / "labels.json"
     entries = json.loads(labels_path.read_text(encoding="utf-8")) if labels_path.exists() else []
     seen = {e["id"] for e in entries}
@@ -25,7 +27,7 @@ def build_dataset(github, repo: str, out_dir: Path, workflow: str = "ci.yml") ->
 
     for run in github.list_failed_runs(repo, workflow):
         match = _TITLE.match(run.get("display_title", ""))
-        label = SCENARIO_LABELS.get(match.group(1)) if match else None
+        label = CASE_LABELS.get(match.group(1)) if match else None
         entry_id = f"run-{run['id']}"
         if label is None or entry_id in seen:
             continue

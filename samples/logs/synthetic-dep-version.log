@@ -1,12 +1,12 @@
 2026-09-14T08:12:31.0370000Z ##[group]Run python -m pip install --upgrade pip
 2026-09-14T08:12:31.1110000Z python -m pip install --upgrade pip
 2026-09-14T08:12:31.2220000Z pip install -r requirements.txt
-2026-09-14T08:12:31.3700000Z if [ "$SCENARIO" = "dependency_missing" ]; then
+2026-09-14T08:12:31.3700000Z if [ "$CASE" = "case_d" ]; then
 2026-09-14T08:12:31.5550000Z   pip install "requests==99.0.0"
 2026-09-14T08:12:31.5920000Z fi
 2026-09-14T08:12:31.6660000Z shell: /usr/bin/bash -e {0}
 2026-09-14T08:12:31.7770000Z env:
-2026-09-14T08:12:31.9250000Z   SCENARIO: dependency_missing
+2026-09-14T08:12:31.9250000Z   CASE: case_d
 2026-09-14T08:12:32.1100000Z ##[endgroup]
 2026-09-14T08:12:32.1470000Z Requirement already satisfied: pip in /opt/hostedtoolcache/Python/3.12.6/x64/lib/python3.12/site-packages (24.2)
 2026-09-14T08:12:32.2210000Z Collecting pytest==8.3.3 (from -r requirements.txt (line 1))

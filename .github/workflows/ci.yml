@@ -1,24 +1,26 @@
 name: CI
-run-name: CI (${{ github.event.inputs.scenario || 'push' }})
+# Case codes are deliberately neutral: this file, the run title and the job log are all input to the
+# triage agent, so nothing here may name the kind of failure. The code-to-label key is in triage/dataset.py.
+run-name: CI (${{ github.event.inputs.case || 'push' }})
 
 on:
   push:
     branches: [main]
   workflow_dispatch:
     inputs:
-      scenario:
-        description: Failure to simulate
+      case:
+        description: Test case
         type: choice
         default: none
         options:
           - none
-          - real_bug
-          - flaky
-          - infra_timeout
-          - dependency_missing
+          - case_a
+          - case_b
+          - case_c
+          - case_d
 
 env:
-  SCENARIO: ${{ github.event.inputs.scenario || 'none' }}
+  CASE: ${{ github.event.inputs.case || 'none' }}
 
 jobs:
   test:
@@ -38,13 +40,13 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          if [ "$SCENARIO" = "dependency_missing" ]; then
+          if [ "$CASE" = "case_d" ]; then
             pip install "requests==99.0.0"
           fi
 
       - name: Fetch test fixtures
         run: |
-          if [ "$SCENARIO" = "infra_timeout" ]; then
+          if [ "$CASE" = "case_c" ]; then
             curl --fail --silent --show-error --max-time 5 https://10.255.255.1/fixtures.tgz -o fixtures.tgz
           else
             echo "Fixtures cached, nothing to fetch"

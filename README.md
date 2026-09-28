@@ -6,12 +6,12 @@ with a confidence level, verbatim log evidence and a suggested next step. Read-o
 edits or deploys anything.
 
 ```
-.github/workflows/ci.yml      The pipeline being triaged. Can simulate each failure type on demand.
+.github/workflows/ci.yml      The pipeline being triaged. A `case` input switches on each failure type.
 .github/workflows/triage.yml  Fires when CI fails: runs the agent and posts to Slack.
 demo-app/                     Small app the CI workflow tests.
 triage/                       The agent: log cleanup, redaction, excerpting, rules, model call, GitHub, Slack, eval.
 samples/                      8 synthetic labelled logs (2 per category).
-scripts/generate_runs.sh      Dispatches simulated runs to produce real failed runs.
+scripts/generate_runs.sh      Dispatches demo runs to produce real failed runs.
 tests/                        Offline tests (fake model client, fake GitHub session, fake webhook).
 ```
 
@@ -50,7 +50,7 @@ Rules-only failures (network, disk, dependency) need no API key; the model is ca
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements-dev.txt
-pytest                                     # 54 offline tests
+pytest                                     # 70 offline tests
 
 python -m triage diagnose --log-file samples/logs/synthetic-flaky-notifier.log
 python -m triage diagnose --repo OWNER/REPO --run-id 123456789
@@ -66,29 +66,35 @@ server-side refusal fallback (needed off the Claude API, e.g. on Bedrock).
 
 ## Build a real evaluation set
 
-1. Run `scripts/generate_runs.sh 3`: 3 runs of each scenario (12 failing, 3 passing). Do not re-run the
-   flaky ones afterwards; a passing re-run overwrites the failed conclusion.
+1. Run `scripts/generate_runs.sh 3`: 3 runs of each case (12 failing, 3 passing). Do not re-run failed
+   `case_b` runs afterwards; a passing re-run overwrites the failed conclusion.
 2. When they finish: `python -m triage build-dataset --repo OWNER/REPO` downloads the redacted logs and
-   labels each from its scenario (`CI (flaky)` becomes `flaky_test`, and so on).
+   labels each from the case code in its run title (`CI (case_b)` becomes `flaky_test`, and so on).
 3. `python -m triage eval` scores against them.
 
-The scenarios are simulated. `real_bug` is a bug switched on by an environment variable, and `flaky`
-fails on attempt 1 and passes on any re-run. That makes the labels certain, but real failures are
-messier, so treat accuracy on this set as an upper bound.
-
-| Scenario | What happens | Label |
+| Case | What happens | Label |
 |---|---|---|
 | `none` | Everything passes | (passing run) |
-| `real_bug` | `apply_discount` has a regression; fails on every attempt | `real_failure` |
-| `flaky` | `test_delivery_acknowledged` times out on attempt 1, passes on a re-run | `flaky_test` |
-| `infra_timeout` | Fixtures download times out (unroutable address) | `infra_failure` |
-| `dependency_missing` | `pip install requests==99.0.0` cannot resolve | `dependency_env` |
+| `case_a` | `apply_discount` subtracts the percentage instead of applying it; fails on every attempt | `real_failure` |
+| `case_b` | `test_delivery_acknowledged` times out on attempt 1, passes on a re-run | `flaky_test` |
+| `case_c` | Fixtures download times out (unroutable address) | `infra_failure` |
+| `case_d` | `pip install requests==99.0.0` cannot resolve | `dependency_env` |
+
+**Why the codes are neutral.** The workflow file, the run title and the job log are all input to the
+model. When the cases had descriptive names, the log printed `SCENARIO: flaky` and the run title was
+`CI (flaky)`, so the model could read the answer instead of diagnosing it. The code-to-label key now lives
+only in `triage/dataset.py`, and `tests/test_demo_repo.py` fails if a label word appears in the workflow,
+the demo source, the demo test output or the sample logs. Runs made before this change are skipped by
+`build-dataset` because their logs contain the answer.
+
+The failures are still planted, which makes the labels certain, but real failures are messier. Treat
+accuracy on this set as an upper bound.
 
 ## What has and has not been tested
 
 Tested (offline): redaction, excerpting, rules, request shape, error handling, eval maths, GitHub client
-against a fake session, Slack payload and escaping, the notify command, demo app behaviour per scenario,
-and the structure and safety properties of both workflows.
+against a fake session, Slack payload and escaping, the notify command, demo app behaviour per case,
+the structure and safety properties of both workflows, and that no label word leaks into the model's input.
 
 **Not yet tested:** a live model call, a live GitHub fetch, a real Slack post, and the workflows actually
 running on GitHub. The first live run is the real test of the prompt, the structured-output request and
