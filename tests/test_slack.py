@@ -101,6 +101,30 @@ def test_notify_dry_run_prints_and_never_posts(notify_env, monkeypatch, capsys):
     assert notify_env == [] and '"blocks"' in capsys.readouterr().out
 
 
+def test_notify_prints_and_saves_the_full_record(notify_env, monkeypatch, capsys, tmp_path):
+    monkeypatch.setenv("SLACK_WEBHOOK_URL", "https://hooks.slack.com/services/T/B/x")
+    out = tmp_path / "diagnosis.json"
+    assert cli.main(["notify", "--repo", "o/r", "--run-id", "7", "--out", str(out)]) == 0
+    record = json.loads(out.read_text())
+    assert record["run_url"] == RUN_URL and record["meta"]["branch"] == "main"
+    assert record["diagnosis"]["category"] == "flaky_test"
+    assert record["diagnosis"]["next_step"] == "Re-run the job."
+    assert '"diagnosis"' in capsys.readouterr().out
+
+
+def test_record_is_saved_even_when_slack_fails(notify_env, monkeypatch, tmp_path):
+    monkeypatch.setenv("SLACK_WEBHOOK_URL", "https://hooks.slack.com/services/T/B/x")
+
+    def reject(url, payload):
+        raise RuntimeError("Slack rejected the message")
+
+    monkeypatch.setattr(cli, "post", reject)
+    out = tmp_path / "diagnosis.json"
+    with pytest.raises(RuntimeError):
+        cli.main(["notify", "--repo", "o/r", "--run-id", "7", "--out", str(out)])
+    assert json.loads(out.read_text())["diagnosis"]["category"] == "flaky_test"
+
+
 def test_notify_without_a_webhook_prints_instead_of_posting(notify_env, monkeypatch, capsys):
     monkeypatch.delenv("SLACK_WEBHOOK_URL", raising=False)
     assert cli.main(["notify", "--repo", "o/r", "--run-id", "7"]) == 0

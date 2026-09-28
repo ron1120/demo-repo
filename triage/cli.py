@@ -47,7 +47,14 @@ def cmd_diagnose(args) -> int:
 def cmd_notify(args) -> int:
     known = load_known_flaky(args.known_flaky)
     d, meta = diagnose_run(args.repo, args.run_id, mode=args.mode, known_flaky=known)
-    payload = build_message(d, meta, f"https://github.com/{args.repo}/actions/runs/{args.run_id}")
+    run_url = f"https://github.com/{args.repo}/actions/runs/{args.run_id}"
+    # Keep a record of the full diagnosis before posting, so it survives a Slack failure.
+    record = json.dumps({"run_url": run_url, "meta": meta, "diagnosis": d.to_dict()}, indent=2)
+    print(record)
+    if args.out:
+        Path(args.out).write_text(record + "\n", encoding="utf-8")
+
+    payload = build_message(d, meta, run_url)
     webhook = os.environ.get("SLACK_WEBHOOK_URL")
     if args.dry_run or not webhook:
         if not args.dry_run:
@@ -103,6 +110,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--mode", choices=MODES, default="hybrid")
     p.add_argument("--known-flaky")
     p.add_argument("--dry-run", action="store_true", help="Print the Slack payload instead of posting it.")
+    p.add_argument("--out", help="Also write the diagnosis record (JSON) to this file.")
     p.set_defaults(func=cmd_notify)
 
     p = sub.add_parser("download", help="Save the redacted log of a failed run to a file.")

@@ -34,4 +34,12 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           REPO: ${{ github.repository }}
           RUN_ID: ${{ github.event.workflow_run.id }}
-        run: python -m triage notify --repo "$REPO" --run-id "$RUN_ID"
+        run: python -m triage notify --repo "$REPO" --run-id "$RUN_ID" --out diagnosis.json
+
+      - name: Save diagnosis record
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: diagnosis-${{ github.event.workflow_run.id }}
+          path: diagnosis.json
+          if-no-files-found: warn

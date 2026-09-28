@@ -26,6 +26,9 @@ tests/                        Offline tests (fake model client, fake GitHub sess
    model with run metadata and any rule hint. The model returns structured JSON.
 6. Anything unclear, refused, truncated or unparseable becomes `needs_human_review`.
 7. The result is posted to Slack with the evidence, next step and a link to the run.
+8. The full record (run metadata plus the diagnosis, and for model answers the model name and token
+   counts) is printed to the triage run's log and saved as an artifact named `diagnosis-<run id>` on
+   that run. It is saved before posting, so it survives a Slack failure.
 
 Log text is treated as untrusted input, and so is anything derived from it. The system prompt tells the
 model never to follow instructions found in a log, and Slack output is escaped so a log cannot inject
@@ -50,7 +53,7 @@ Rules-only failures (network, disk, dependency) need no API key; the model is ca
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements-dev.txt
-pytest                                     # 70 offline tests
+pytest                                     # 75 offline tests
 
 python -m triage diagnose --log-file samples/logs/synthetic-flaky-notifier.log
 python -m triage diagnose --repo OWNER/REPO --run-id 123456789

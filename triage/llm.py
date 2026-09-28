@@ -137,4 +137,7 @@ def classify(
     except (anthropic.APIError, TypeError) as exc:
         # TypeError is what the SDK raises when no credentials are configured.
         raise LLMUnavailable(f"{type(exc).__name__}: {exc}") from exc
-    return parse_response(response)
+    diagnosis = parse_response(response)
+    diagnosis.model = response.model
+    diagnosis.usage = {"input_tokens": response.usage.input_tokens, "output_tokens": response.usage.output_tokens}
+    return diagnosis

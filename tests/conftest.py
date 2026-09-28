@@ -18,7 +18,12 @@ class FakeClient:
         self.calls.append(kwargs)
         if self._error:
             raise self._error
-        return SimpleNamespace(stop_reason=self._stop_reason, content=[SimpleNamespace(type="text", text=self._text)])
+        return SimpleNamespace(
+            model="claude-opus-5-5",
+            stop_reason=self._stop_reason,
+            content=[SimpleNamespace(type="text", text=self._text)],
+            usage=SimpleNamespace(input_tokens=1200, output_tokens=300),
+        )
 
 
 ANSWER = {

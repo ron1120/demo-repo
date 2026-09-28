@@ -21,6 +21,8 @@ class Diagnosis:
     next_step: str = ""
     source: str = "llm"  # "rules" | "llm" | "error"
     redactions: int = 0
+    model: str = ""  # the model that answered (a fallback model if the first one declined); empty for rules
+    usage: dict = field(default_factory=dict)
 
     def to_dict(self) -> dict:
         return asdict(self)
