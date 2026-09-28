@@ -10,8 +10,9 @@ edits or deploys anything.
 .github/workflows/triage.yml  Fires when CI fails: runs the agent and posts to Slack.
 demo-app/                     Small app the CI workflow tests.
 triage/                       The agent: log cleanup, redaction, excerpting, rules, model call, GitHub, Slack, eval.
-samples/                      8 synthetic labelled logs (2 per category).
+samples/                      8 synthetic labelled logs (2 per category), built by scripts/make_samples.py.
 scripts/generate_runs.sh      Dispatches demo runs to produce real failed runs.
+scripts/make_samples.py       Regenerates samples/ (python scripts/make_samples.py).
 tests/                        Offline tests (fake model client, fake GitHub session, fake webhook).
 ```
 
