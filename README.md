@@ -66,7 +66,7 @@ python -m triage eval --mode hybrid
 
 Credentials: `ANTHROPIC_API_KEY` for model calls, `GITHUB_TOKEN` (or `gh auth login`) for fetching runs.
 Modes: `hybrid` (default), `rules` (no model), `llm` (model only). Settings: `TRIAGE_MODEL` (default
-`claude-opus-5-5`), `TRIAGE_EFFORT` (default `medium`), `TRIAGE_FALLBACKS=0` to turn off the
+`claude-sonnet-5-5`), `TRIAGE_EFFORT` (default `medium`), `TRIAGE_FALLBACKS=0` to turn off the
 server-side refusal fallback (needed off the Claude API, e.g. on Bedrock).
 
 ## Build a real evaluation set

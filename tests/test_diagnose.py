@@ -23,7 +23,7 @@ def test_unmatched_failure_goes_to_the_model(fake):
 
 def test_model_and_token_usage_are_recorded(fake):
     d = diagnose_text(ASSERTION_LOG, client=fake)
-    assert d.model == "claude-opus-5-5"
+    assert d.model == "claude-sonnet-5-5"
     assert d.usage == {"input_tokens": 1200, "output_tokens": 300}
     assert d.to_dict()["usage"]["output_tokens"] == 300
 
@@ -36,7 +36,7 @@ def test_rule_diagnosis_has_no_model_or_usage(fake):
 def test_request_shape(fake):
     diagnose_text(ASSERTION_LOG, meta={"run_attempt": 1}, client=fake)
     request = fake.calls[0]
-    assert request["model"] == "claude-opus-5-5"
+    assert request["model"] == "claude-sonnet-5-5"
     assert request["output_config"]["format"]["type"] == "json_schema"
     assert request["output_config"]["effort"] == "medium"
     assert "thinking" not in request
